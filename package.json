@@ -1,39 +1,36 @@
 {
-  "name": "@alice-health/ky-hooks-change-case",
-  "version": "0.0.3",
-  "description": "Allow modifications cases on requests and responses of the objects during the ky request",
+  "name": "@valentingaudin/ky-change-case-hook",
+  "version": "1.0.0",
+  "description": "Modify the case of request and response object keys in Ky HTTP hooks.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "license": "MIT",
-  "dependencies": {
-    "lodash": "^4.17.20"
-  },
   "scripts": {
-    "build": "rollup index.js --format=umd --name=ky-hooks-change-case --dir=dist",
-    "test": "npm run build && nyc --reporter=lcov ava"
+    "build": "tsc",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "ava": "^3.13.0",
+    "@types/create-test-server": "^3.0.5",
+    "@types/lodash": "^4.14.200",
+    "@vitest/coverage-v8": "^3.1.2",
     "create-test-server": "^3.0.1",
-    "form-data": "^3.0.0",
-    "ky": "^0.24.0",
-    "ky-universal": "^0.8.2",
-    "nyc": "^15.1.0",
-    "rollup": "^2.28.2"
-  },
-  "ava": {
-    "require": [
-      "./test/_require.js"
-    ]
+    "ky": "^1.8.0",
+    "tsup": "8.3.5",
+    "typescript": "^5.3.3",
+    "vitest": "^3.1.2"
   },
   "directories": {
     "test": "test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alice-health/ky-hooks-change-case.git"
+    "url": "git+https://github.com/valentingaudin/ky-change-case-hook.git"
   },
   "bugs": {
-    "url": "https://github.com/alice-health/ky-hooks-change-case/issues"
+    "url": "https://github.com/valentingaudin/ky-change-case-hook/issues"
   },
-  "homepage": "https://github.com/alice-health/ky-hooks-change-case#readme"
+  "homepage": "https://github.com/valentingaudin/ky-change-case-hook#readme"
 }

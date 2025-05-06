@@ -1,79 +1,73 @@
-(function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash/snakeCase'), require('lodash/camelCase'), require('lodash/kebabCase'), require('lodash/isPlainObject'), require('lodash/isObject'), require('lodash/isArray')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'lodash/snakeCase', 'lodash/camelCase', 'lodash/kebabCase', 'lodash/isPlainObject', 'lodash/isObject', 'lodash/isArray'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global['ky-hooks-change-case'] = {}, global.snakeCase, global.camelCase, global.kebabCase, global.isPlainObject, global.isObject, global.isArray));
-}(this, (function (exports, snakeCase, camelCase, kebabCase, isPlainObject, isObject, isArray) { 'use strict';
-
-  function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-  var snakeCase__default = /*#__PURE__*/_interopDefaultLegacy(snakeCase);
-  var camelCase__default = /*#__PURE__*/_interopDefaultLegacy(camelCase);
-  var kebabCase__default = /*#__PURE__*/_interopDefaultLegacy(kebabCase);
-  var isPlainObject__default = /*#__PURE__*/_interopDefaultLegacy(isPlainObject);
-  var isObject__default = /*#__PURE__*/_interopDefaultLegacy(isObject);
-  var isArray__default = /*#__PURE__*/_interopDefaultLegacy(isArray);
-
-  const uuidValidate = function (value) {
+import snakeCase from 'lodash/snakeCase';
+import camelCase from 'lodash/camelCase';
+import kebabCase from 'lodash/kebabCase';
+import isPlainObject from 'lodash/isPlainObject';
+import isObject from 'lodash/isObject';
+import isArray from 'lodash/isArray';
+/**
+ * Check if a string is a valid UUID (including nil UUID).
+ */
+const uuidValidate = (value) => {
     const regex = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
     return regex.test(value);
-  };
-
-  const mapKeysDeep = function (obj, fn) {
-    if (isArray__default['default'](obj)) {
-      return obj.map((item) => {
-        return mapKeysDeep(item, fn);
-      });
+};
+/**
+ * Recursively transforms the keys of an object using a modifier function.
+ */
+const mapKeysDeep = (obj, fn) => {
+    if (isArray(obj)) {
+        return obj.map((item) => mapKeysDeep(item, fn));
     }
-
-    if (isPlainObject__default['default'](obj)) {
-      return Object.keys(obj).reduce((accumulator, key) => {
-        const value = obj[key];
-        const newKey = uuidValidate(key) ? key : fn(key);
-        accumulator[newKey] = isObject__default['default'](value) ? mapKeysDeep(value, fn) : value;
-        return accumulator;
-      }, {});
+    if (isPlainObject(obj)) {
+        return Object.keys(obj).reduce((acc, key) => {
+            const value = obj[key];
+            const newKey = uuidValidate(key) ? key : fn(key);
+            acc[newKey] = isObject(value) ? mapKeysDeep(value, fn) : value;
+            return acc;
+        }, {});
     }
-
     return obj;
-  };
-
-  function createRequestModify(modifier) {
+};
+/**
+ * Hook to modify request body keys using a casing function.
+ */
+const createRequestModify = (modifier) => {
     return async (request, options) => {
-      if (options.body && !(options.body instanceof FormData)) {
-        const body = JSON.parse(options.body);
-        const convertedBody = mapKeysDeep(body, modifier);
-        return new Request(request, { body: JSON.stringify(convertedBody) });
-      }
+        if (options.body && !(options.body instanceof FormData)) {
+            const body = JSON.parse(options.body);
+            const convertedBody = mapKeysDeep(body, modifier);
+            return new Request(request, {
+                ...options,
+                body: JSON.stringify(convertedBody),
+                headers: request.headers,
+            });
+        }
     };
-  }
-
-  function createResponseModify(modifier) {
+};
+/**
+ * Hook to modify response body keys using a casing function.
+ */
+const createResponseModify = (modifier) => {
     return async (input, options, response) => {
-      try {
-        const body = await response.json();
-        const convertedBody = mapKeysDeep(body, modifier);
-        return new Response(JSON.stringify(convertedBody), response);
-      } catch (e) {
-        return;
-      }
+        try {
+            const body = await response.clone().json();
+            const convertedBody = mapKeysDeep(body, modifier);
+            return new Response(JSON.stringify(convertedBody), {
+                status: response.status,
+                statusText: response.statusText,
+                headers: response.headers,
+            });
+        }
+        catch {
+            // return undefined to let ky use the original response
+            return;
+        }
     };
-  }
-
-  const requestToSnakeCase = createRequestModify(snakeCase__default['default']);
-  const requestToCamelCase = createRequestModify(camelCase__default['default']);
-  const requestToKebabCase = createRequestModify(kebabCase__default['default']);
-
-  const responseToSnakeCase = createResponseModify(snakeCase__default['default']);
-  const responseToCamelCase = createResponseModify(camelCase__default['default']);
-  const responseToKebabCase = createResponseModify(kebabCase__default['default']);
-
-  exports.requestToCamelCase = requestToCamelCase;
-  exports.requestToKebabCase = requestToKebabCase;
-  exports.requestToSnakeCase = requestToSnakeCase;
-  exports.responseToCamelCase = responseToCamelCase;
-  exports.responseToKebabCase = responseToKebabCase;
-  exports.responseToSnakeCase = responseToSnakeCase;
-
-  Object.defineProperty(exports, '__esModule', { value: true });
-
-})));
+};
+export const requestToSnakeCase = createRequestModify(snakeCase);
+export const requestToCamelCase = createRequestModify(camelCase);
+export const requestToKebabCase = createRequestModify(kebabCase);
+export const responseToSnakeCase = createResponseModify(snakeCase);
+export const responseToCamelCase = createResponseModify(camelCase);
+export const responseToKebabCase = createResponseModify(kebabCase);
+//# sourceMappingURL=index.js.map

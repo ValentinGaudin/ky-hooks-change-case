@@ -1,22 +1,25 @@
 <p>
-  <a href="https://codecov.io/github/alice-health/ky-hooks-change-case"><img src="https://img.shields.io/codecov/c/github/alice-health/ky-hooks-change-case.svg?sanitize=true" alt="Coverage Status"></a>
+  <a href="https://codecov.io/github/ValentinGaudin/ky-change-case-hooks">
+    <img src="https://img.shields.io/codecov/c/github/ValentinGaudin/ky-change-case-hooks.svg?sanitize=true" alt="Coverage Status">
+  </a>
 </p>
 
-# ky hooks change case
+# ky-change-case-hooks
 
-Allow modifications cases on requests and responses of the objects during the ky request
+Hooks to automatically transform the casing of request and response payloads when using the [ky](https://github.com/sindresorhus/ky) HTTP client.
 
+> 🔄 This project is an **actively maintained fork** of [`@alice-health/ky-hooks-change-case`](https://github.com/alice-health/ky-hooks-change-case), originally developed by [@nfriend](https://github.com/nfriend) and unmaintained since 2023.  
+> 🛠️ Maintained by [Valentin Gaudin](https://github.com/ValentinGaudin).  
+> 📦 Published under the new name: `@valentingaudin/ky-change-case-hooks`
+
+---
 ## Install
 
 ###### NPM
 
+```bash
+npm install @valentingaudin/ky-change-case-hooks
 ```
-$ npm install @alice-health/ky-hooks-change-case
-```
-
-###### CDN
-
-[unpkg](https://unpkg.com/@alice-health/ky-hooks-change-case)
 
 ## Usage
 
@@ -25,7 +28,7 @@ import ky from "ky";
 import {
   requestToSnakeCase,
   responseToCamelCase,
-} from "@alice-health/ky-hooks-change-case";
+} from "@valentingaudin/ky-change-case-hook";
 
 ky.post(`${server.url}/path`, {
   json: { fooBar: true },

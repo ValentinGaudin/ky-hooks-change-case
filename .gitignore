@@ -1,3 +1,13 @@
+#VSCode
+.vscode/
+
+# MacOS
+.DS_Store
+# Windows
+Thumbs.db
+
+# Jetbrains
+.idea/
 
 # Logs
 logs
@@ -12,3 +22,6 @@ node_modules/
 # Code coverage
 .nyc_output
 coverage
+
+# Build
+/dist
