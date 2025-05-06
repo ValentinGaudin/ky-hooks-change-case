@@ -3,7 +3,10 @@ import { Express } from "express";
 import ky from 'ky';
 import { describe, it, expect } from 'vitest';
 import { transformResponseToCamelCase } from "../src/transformers/responses";
+import {mapKeysDeep} from "../src/core/mapKeysDeep";
+import camelCase from "lodash/camelCase";
 
+class Custom {}
 
 let server: createTestServer.TestServer & Omit<Express , "listen"> & {
   get: (url: string, response: (string | (() => string))) => void
@@ -36,5 +39,11 @@ describe('ky-change-case-hook', () => {
     });
 
     await server.close();
+  });
+
+  it('should return untouched object for non-plain objects', () => {
+    const instance = new Custom();
+    const result = mapKeysDeep(instance, camelCase);
+    expect(result).toBe(instance);
   });
 });

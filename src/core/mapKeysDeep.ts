@@ -1,4 +1,3 @@
-import isArray from "lodash/isArray";
 import isPlainObject from "lodash/isPlainObject";
 import isObject from "lodash/isObject";
 
